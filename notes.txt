@@ -1,8 +1,0 @@
-// upgrade pip to its latest version  
-python -m pip install --upgrade pip   
-
-
-python -m pip install --user virtualenv
-python -m venv env
-
-$env:FLASK_APP = "app.py"
