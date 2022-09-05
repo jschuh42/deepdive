@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - shell: bash
+      env:
+        docker_pw: ${{ secrets.SECRET_DOCKER_TOKEN }}
+      run: |
+        docker login --username jiso --password ${{ secrets.SECRET_DOCKER_TOKEN }}
+        docker build -t jiso/deepdive:latest .
+        docker push jiso/deepdive:latest
+    - shell: bash
+      env:
+        sp_client_id: ${{ secrets.SECRET_SP_CLIENT_ID }}
+        sp_password: ${{ secrets.SECRET_SP_PASSWORD }}
+        subscription: "4139e5d0-b93c-4c6f-8296-cf894ad95dfd"
+        tenant: "1b7ebc65-8513-4491-aac7-a9ddebe4df1b"
+      run: |
+        az login --service-principal -u $sp_client_id -p $sp_password --tenant $tenant
+        az account set -s $subscription
+    - shell: bash
+      env:
+        subscription: "4139e5d0-b93c-4c6f-8296-cf894ad95dfd"
+        rg: "jim-container-instance"
+        name: "deepdive"
+        image: "jiso/deepdive"
+        registry: "docker.io"
+        username_registry: "jiso"
+        password_registry: ${{ secrets.SECRET_DOCKER_TOKEN }}
+        port: 5000
+        protocoll: "TCP"
+        ip: "Public"
+        dnslabel: "jim-deepdive-demo"
+      run: |
+        az account set -s $subscription
+        az container create \
+                --resource-group $rg \
+                --name $name \
+                --image $image \
+                --registry-login-server $registry \
+                --registry-password $password_registry \
+                --registry-username $username_registry \
+                --ports $port \
+                --protocol $protocoll \
+                --ip-address $ip \
+                --dns-name-label $dnslabel
