@@ -39,7 +39,17 @@ jobs:
         dnslabel: "jim-deepdive-demo"
       run: |
         az account set -s $subscription
-        az container create \
+
+        if az container list | grep "deepdive"
+        then 
+            echo "Container already exists. Restarting ..."
+            az container restart \
+              --name $name \
+              --resource-group $rg \
+              --no-wait
+        else
+            echo "Container doesn't exist. Creating ..."
+            az container create \
                 --resource-group $rg \
                 --name $name \
                 --image $image \
@@ -50,3 +60,4 @@ jobs:
                 --protocol $protocoll \
                 --ip-address $ip \
                 --dns-name-label $dnslabel
+        fi

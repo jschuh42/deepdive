@@ -9,6 +9,6 @@ ADD * /app/
 RUN pip3 install -r requirements.txt
 
 ENV FLASK_APP=app
-ENV FLASK_ENV=production
+ENV FLASK_ENV=development
 
 CMD flask run --host=0.0.0.0 -p 5000
