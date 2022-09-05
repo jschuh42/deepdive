@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/main.css"/>
+    </head>
+    <body>
+        {% if name != "" %}
+        <p>
+            Your name is {{ name }}
+        </p>
+        {% endif %}
+
+        <a href="{{ url_for('start') }}""><button type="submit">Back to Start!</button></a>
+    </body>
+</html>
