@@ -4,8 +4,7 @@ RUN mkdir /app
 
 WORKDIR /app
 
-ADD requirements.txt /app
-ADD * /app
+COPY * /app
 
 RUN pip3 install -r requirements.txt
 
