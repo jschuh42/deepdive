@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
 @app.route('/')
 def start():
-    variable = "Greeting"
+    variable = "Welcome friends!"
     return render_template('start.html',
         greeting = variable)
 
